@@ -51,8 +51,11 @@
       </a-col>
       <a-col :xl="{span: 7, offset: 1}" :lg="{span: 8}" :md="{span: 12}" :sm="24">
         <a-form-item label="单选框">
-          <a-radio-group @change="radioChange">
-            <a-radio :value="1">A12345</a-radio>
+          <a-radio-group
+            @change="radioChange"
+            v-decorator="[ 'radioselect', {rules: [{ required: true, message: '请选择一项'}]} ]"
+          >
+            <a-radio :value="1">A test</a-radio>
             <a-radio :value="2">B</a-radio>
             <a-radio :value="3">C</a-radio>
             <a-radio :value="4" :disabled="true">D</a-radio>
