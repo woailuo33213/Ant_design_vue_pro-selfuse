@@ -1,42 +1,36 @@
-English | [简体中文](./README.zh-CN.md)
-
-<h1 align="center">Ant Design Vue Pro</h1>
-<div align="center">
-An out-of-box UI solution for enterprise applications as a Vue boilerplate. based on  <a href="https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/" target="_blank">Ant Design of Vue</a>
-</div>
-
-<div align="center">
 [![License](https://img.shields.io/npm/l/package.json.svg?style=flat)](https://github.com/vueComponent/ant-design-vue-pro/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/release/vueComponent/ant-design-vue-pro.svg?style=flat)](https://github.com/vueComponent/ant-design-vue-pro/releases/latest)
 [![Travis branch](https://travis-ci.org/vueComponent/ant-design-vue-pro.svg?branch=master)](https://travis-ci.org/vueComponent/ant-design-vue-pro)
 
-</div>
 
 Overview
 ----
 
 暂无
 
-### Env and dependencies
+环境和依赖
+----
 
 - node
 - yarn
 - webpack
 - eslint
 - @vue/cli ~3
-- [ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 
-- [vue-cropper](https://github.com/xyxiao001/vue-cropper) - Picture edit
-- [@antv/g2](https://antv.alipay.com/zh-cn/index.html) - AntV G2
-- [Viser-vue](https://viserjs.github.io/docs.html#/viser/guide/installation)  - Antv/G2 of Vue
+- [ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
+- [vue-cropper](https://github.com/xyxiao001/vue-cropper) - 头像裁剪组件
+- [@antv/g2](https://antv.alipay.com/zh-cn/index.html) - Alipay AntV 数据可视化图表
+- [Viser-vue](https://viserjs.github.io/docs.html#/viser/guide/installation)  - antv/g2 封装实现
 
-> Note:  [Yarn](https://yarnpkg.com/) package management is recommended, the exact same version loaded with the demo site of this project (yarn.lock) . but you can also use npm
+> 请注意，我们强烈建议本项目使用 [Yarn](https://yarnpkg.com/) 包管理工具，这样可以与本项目演示站所加载完全相同的依赖版本 (yarn.lock) 。由于我们没有对依赖进行强制的版本控制，采用非 yarn 包管理进行引入时，可能由于 Pro 所依赖的库已经升级版本而引入了新版本所导致的问题。作者可能会由于时间问题无法及时排查而导致您采用本项目作为基项目而出现问题。
 
 
-### Project setup
 
-- 克隆
+项目下载和运行
+----
+
+- 拉取项目代码
 ```bash
-git clone https://github.com/woailuo33213/Ant_design_vue_pro-.git
+git clone git@github.com:woailuo33213/Ant_design_vue_pro-.git
 cd ant-design-vue-pro
 ```
 
@@ -45,12 +39,12 @@ cd ant-design-vue-pro
 yarn install
 ```
 
-- 编译与热加载，推荐用vue-cli管理。vue/cli3.0之后有图形界面管理。
+- 开发模式运行
 ```
 yarn run serve
 ```
 
-- build
+- 编译项目
 ```
 yarn run build
 ```
@@ -60,7 +54,9 @@ yarn run build
 yarn run lint
 ```
 
-## Browsers support
+
+
+## 浏览器兼容
 
 Modern browsers and IE10.
 
