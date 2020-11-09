@@ -59,10 +59,10 @@
               >
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
+                <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'" />
-                </a>
+                </a>-->
               </span>
             </a-col>
           </a-row>
@@ -71,6 +71,8 @@
       <!-- // TODO:此处selectedRowKeys.legth不生效。v-action:edit 原因是action没检测到权限，不渲染 -->
       <!-- <a-dropdown v-action:edit v-show="selectedRowKeys.length > 0"> -->
       <!-- 详见src/core/directives/action.js -->
+    </a-card>
+    <a-card>
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-dropdown v-show="selectedRowKeys.length > 0">
@@ -212,7 +214,7 @@ export default {
       confirmLoading: false,
       mdl: null,
       // 高级搜索 展开/关闭
-      advanced: false,
+      advanced: true,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象

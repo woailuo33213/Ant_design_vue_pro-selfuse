@@ -7,18 +7,19 @@
     <!-- table -->
     <a-card>
       <a-table :columns="columns" :dataSource="data" :pagination="false" :loading="memberLoading">
-        <!-- <template slot-scope="text, record">
-          <a-input
-            :key="name"
-            v-if="record.editable"
-            style="margin: -5px 0"
-            placeholder="请输入姓名"
-            :value="name"
-            @change="e => handleChange(e.target.value,record.key,name)"
-          />
-          <template v-else>{{ text }}</template>
-        </template>-->
-
+        <a slot="name" slot-scope="text">{{ text }}</a>
+        <span slot="customTitle">
+          <a-icon type="smile-o" />Name
+        </span>
+        <a-input
+          v-if="record.editable"
+          placeholder="请输入姓名"
+          slot="name"
+          :value="name"
+          slot-scope="name, record"
+          @change="e => handleChange(e.target.value,record.key,name)"
+        />
+        <span v-else>{{name}}</span>
         <template slot="operation" slot-scope="text, record">
           <template v-if="record.editable">
             <span v-if="record.isNew">

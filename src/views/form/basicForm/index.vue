@@ -44,21 +44,9 @@
               'buildTime',
               {rules: [{ required: true, message: '请选择日期' }]}
             ]"
+            showTime
           />
           <a-date-picker name="buildTimedisabled" style="width: 100%" :disabled="true" />
-        </a-form-item>
-        <a-form-item
-          label="时间"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-        >
-          <a-time-picker
-            name="Time"
-            style="width: 100%"
-            v-decorator="['time-picker', {rules: [{ required: true, message: '请选择时间' }]}
-            ]"
-          />
-          <a-time-picker name="Timedisabled" style="width: 100%" :disabled="true" />
         </a-form-item>
         <a-form-item
           label="文本域"

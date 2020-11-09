@@ -21,19 +21,29 @@
               'buildTime',
               {rules: [{ required: true, message: '请选择日期' }]}
             ]"
+            showTime
           />
         </a-form-item>
       </a-col>
       <a-col :xl="{span: 9, offset: 1}" :lg="{span: 10}" :md="{span: 24}" :sm="24">
-        <a-form-item label="时间">
-          <a-time-picker
-            name="Time"
-            style="width: 100%"
-            v-decorator="[
-              'buildTime',
-              {rules: [{ required: true, message: '请选择时间' }]}
-            ]"
-          />
+        <a-form-item label="upload">
+          <div class="clearfix">
+            <a-upload
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              @change="handleChange"
+            >
+              <div v-if="fileList.length < 8">
+                <a-icon type="plus" />
+                <div class="ant-upload-text">Upload</div>
+              </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
+          </div>
         </a-form-item>
       </a-col>
     </a-row>
@@ -94,6 +104,14 @@
 
 <script>
 import richText from '../../../components/Editor/QuillEditor'
+function getBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
+}
 export default {
   name: 'RepositoryForm',
   props: {
@@ -106,6 +124,22 @@ export default {
   data () {
     return {
       form: this.$form.createForm(this),
+      previewVisible: false,
+      previewImage: '',
+      fileList: [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+        },
+        {
+          uid: '-2',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+        }
+      ],
       content: ''
     }
   },
@@ -136,6 +170,19 @@ export default {
     },
     editorChange: function (html) {
       this.content = html
+    },
+    handleCancel () {
+      this.previewVisible = false
+    },
+    async handlePreview (file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj)
+      }
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
+    },
+    handleChange ({ fileList }) {
+      this.fileList = fileList
     }
   }
 }

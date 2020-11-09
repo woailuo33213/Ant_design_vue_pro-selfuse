@@ -15,8 +15,6 @@ module.exports = {
     'no-debugger': 'off',
     'generator-star-spacing': 'off',
     'no-mixed-operators': 0,
-    // TODO: 删除了每行的最大属性限制，如果格式化不自动整理了就加回去。
-    'vue/max-attributes-per-line': 'off',
     'vue/attribute-hyphenation': 0,
     'vue/html-self-closing': 0,
     'vue/html-closing-bracket-spacing': 0,
@@ -50,7 +48,8 @@ module.exports = {
       }
     ],
     'template-curly-spacing': 'off',
-    indent: 'off'
+    indent: 'off',
+    'vue/max-attributes-per-line': 'off'
   },
 
   parserOptions: {
