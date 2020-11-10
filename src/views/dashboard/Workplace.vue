@@ -14,19 +14,6 @@
         </div>
       </div>
     </template>
-    <!--    <template v-slot:extraContent>
-      <div class="extra-content">
-        <div class="stat-item">
-          <a-statistic title="项目数" :value="56" />
-        </div>
-        <div class="stat-item">
-          <a-statistic title="团队内排名" :value="8" suffix="/ 24" />
-        </div>
-        <div class="stat-item">
-          <a-statistic title="项目访问" :value="2223" />
-        </div>
-      </div>
-    </template>-->
 
     <div>
       <a-col style="padding: 0 12px" :xl="24" :lg="24" :md="24" :sm="24" :xs="24">

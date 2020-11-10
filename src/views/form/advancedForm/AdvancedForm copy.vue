@@ -7,19 +7,21 @@
     <!-- table -->
     <a-card>
       <a-table :columns="columns" :dataSource="data" :pagination="false" :loading="memberLoading">
-        <a slot="name" slot-scope="text">{{ text }}</a>
-        <span slot="customTitle">
-          <a-icon type="smile-o" />Name
-        </span>
-        <a-input
-          v-if="record.editable"
-          placeholder="请输入姓名"
-          slot="name"
-          :value="name"
-          slot-scope="name, record"
-          @change="e => handleChange(e.target.value,record.key,name)"
-        />
-        <span v-else>{{name}}</span>
+        <template
+          v-for="(col, i) in ['name', 'workId', 'department']"
+          :slot="col"
+          slot-scope="text, record"
+        >
+          <a-input
+            :key="col"
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :value="text"
+            :placeholder="columns[i].title"
+            @change="e => handleChange(e.target.value, record.key, col)"
+          />
+          <template v-else>{{ text }}</template>
+        </template>
         <template slot="operation" slot-scope="text, record">
           <template v-if="record.editable">
             <span v-if="record.isNew">

@@ -1,57 +1,59 @@
 <template>
   <page-header-wrapper :title="false">
-    <a-card :bordered="false">
+    <a-card class="card" :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="规则编号">
-                <a-input v-model="queryParam.id" placeholder />
+              <a-form-item label="姓名">
+                <a-input v-model="queryParam.name" placeholder="请输入姓名" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="国籍">
+                <a-select @change="countryChange" placeholder="请选择">
+                  <a-select-option value="1">China</a-select-option>
+                  <a-select-option value="0">U.S.A</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="性别">
+                <a-radio-group @change="radioChange">
+                  <a-radio :value="1">男</a-radio>
+                  <a-radio :value="0">女</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="更新日期">
+                <a-date-picker
+                  v-model="queryParam.date"
+                  style="width: 100%"
+                  placeholder="请输入更新日期"
+                  showTime
+                />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="使用状态">
-                <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
                   <a-select-option value="0">全部</a-select-option>
                   <a-select-option value="1">关闭</a-select-option>
                   <a-select-option value="2">运行中</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="更新日期">
-                  <a-date-picker
-                    v-model="queryParam.date"
-                    style="width: 100%"
-                    placeholder="请输入更新日期"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </template>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="标签选择">
+                <a-checkbox-group @change="onChange" style="width: 100%">
+                  <a-checkbox value="A">A</a-checkbox>
+                  <a-checkbox value="B">B</a-checkbox>
+                  <a-checkbox value="C">C</a-checkbox>
+                  <a-checkbox value="D">D</a-checkbox>
+                </a-checkbox-group>
+              </a-form-item>
+            </a-col>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span
                 class="table-page-search-submitButtons"
@@ -68,13 +70,17 @@
           </a-row>
         </a-form>
       </div>
-      <!-- // TODO:此处selectedRowKeys.legth不生效。v-action:edit 原因是action没检测到权限，不渲染 -->
+      <!-- 此处selectedRowKeys.legth不生效。v-action:edit 原因是action没检测到权限，不渲染 -->
       <!-- <a-dropdown v-action:edit v-show="selectedRowKeys.length > 0"> -->
       <!-- 详见src/core/directives/action.js -->
     </a-card>
-    <a-card>
+    <a-card class="card">
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <!-- <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button> -->
+        <a-button type="primary" icon="plus">
+          <!-- //TODO: 跳转的动画没实现 -->
+          <router-link class="default" to="/form/base-form">新建</router-link>
+        </a-button>
         <a-dropdown v-show="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1">
@@ -118,7 +124,6 @@
           </template>
         </span>
       </s-table>
-
       <create-form
         ref="createModal"
         :visible="visible"
@@ -213,7 +218,7 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索 展开/关闭
+      // 高级搜索 展开/关闭 已删除
       advanced: true,
       // 查询参数
       queryParam: {},
@@ -328,7 +333,37 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    radioChange (selected) {
+      // console.log(selected.target.value)
+      if (selected.target.value) {
+        this.queryParam.sex = '男'
+      } else {
+        this.queryParam.sex = '女'
+      }
+    },
+    countryChange (selected) {
+      // console.log(selected) 0/1
+      this.queryParam.countryCode = selected
+      if (selected) {
+        this.queryParam.countryName = 'China'
+      } else {
+        this.queryParam.countryName = 'U.S.A'
+      }
+    },
+    onChange (checkedValues) {
+      // console.log('checked = ', checkedValues)
+      this.queryParam.checkedValues = checkedValues
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.card {
+  margin-bottom: 24px;
+}
+.default {
+  color: #fff;
+}
+</style>

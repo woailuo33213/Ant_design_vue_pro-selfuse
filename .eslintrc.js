@@ -49,7 +49,8 @@ module.exports = {
     ],
     'template-curly-spacing': 'off',
     indent: 'off',
-    'vue/max-attributes-per-line': 'off'
+    'vue/max-attributes-per-line': 'off',
+    'vue/require-default-prop': 'off'
   },
 
   parserOptions: {
