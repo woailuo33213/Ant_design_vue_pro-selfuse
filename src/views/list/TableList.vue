@@ -5,68 +5,90 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
-                <a-input v-model="queryParam.name" placeholder="请输入姓名" />
-              </a-form-item>
+              <label>
+                姓名:
+                <a-form-item>
+                  <a-input v-model="queryParam.name" placeholder="请输入姓名" />
+                </a-form-item>
+              </label>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="国籍">
-                <a-select @change="countryChange" placeholder="请选择">
-                  <a-select-option value="1">China</a-select-option>
-                  <a-select-option value="0">U.S.A</a-select-option>
-                </a-select>
-              </a-form-item>
+              <label>
+                国籍:
+                <a-form-item>
+                  <a-select @change="countryChange" placeholder="请选择">
+                    <a-select-option value="1">China</a-select-option>
+                    <a-select-option value="0">U.S.A</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </label>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="性别">
-                <a-radio-group @change="radioChange">
-                  <a-radio :value="1">男</a-radio>
-                  <a-radio :value="0">女</a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker
-                  v-model="queryParam.date"
-                  style="width: 100%"
-                  placeholder="请输入更新日期"
-                  showTime
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="标签选择">
-                <a-checkbox-group @change="onChange" style="width: 100%">
-                  <a-checkbox value="A">A</a-checkbox>
-                  <a-checkbox value="B">B</a-checkbox>
-                  <a-checkbox value="C">C</a-checkbox>
-                  <a-checkbox value="D">D</a-checkbox>
-                </a-checkbox-group>
-              </a-form-item>
-            </a-col>
-            <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span
-                class="table-page-search-submitButtons"
-                :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
-              >
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
-                  {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'" />
-                </a>-->
-              </span>
-            </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+                <label>
+                  性别:
+                  <a-form-item>
+                    <a-radio-group @change="radioChange">
+                      <a-radio :value="1">男</a-radio>
+                      <a-radio :value="0">女</a-radio>
+                    </a-radio-group>
+                  </a-form-item>
+                </label>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <label>
+                  更新日期:
+                  <a-form-item>
+                    <a-date-picker
+                      v-model="queryParam.date"
+                      style="width: 100%"
+                      placeholder="请输入更新日期"
+                      showTime
+                    />
+                  </a-form-item>
+                </label>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <label>
+                  使用状态:
+                  <a-form-item>
+                    <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
+                      <a-select-option value="0">全部</a-select-option>
+                      <a-select-option value="1">关闭</a-select-option>
+                      <a-select-option value="2">运行中</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </label>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <label>
+                  标签选择:
+                  <a-form-item>
+                    <a-checkbox-group @change="onChange" style="width: 100%">
+                      <a-checkbox value="A">A</a-checkbox>
+                      <a-checkbox value="B">B</a-checkbox>
+                      <a-checkbox value="C">C</a-checkbox>
+                      <a-checkbox value="D">D</a-checkbox>
+                    </a-checkbox-group>
+                  </a-form-item>
+                </label>
+              </a-col>
+            </template>
+            <div style="margin-top:20px">
+              <a-col :md="!advanced && 8 || 24" :sm="24">
+                <span
+                  class="table-page-search-submitButtons"
+                  :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
+                >
+                  <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                  <a @click="toggleAdvanced" style="margin-left: 8px">
+                    {{ advanced ? '收起' : '展开' }}
+                    <a-icon :type="advanced ? 'up' : 'down'" />
+                  </a>
+                </span>
+              </a-col>
+            </div>
           </a-row>
         </a-form>
       </div>
@@ -81,21 +103,17 @@
           <!-- //TODO: 跳转的动画没实现 -->
           <router-link class="default" to="/form/base-form">新建</router-link>
         </a-button>
-        <a-dropdown v-show="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1">
-              <a-icon type="delete" />删除
-            </a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2">
-              <a-icon type="lock" />锁定
-            </a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作
-            <a-icon type="down" />
+        <div style="display:inline-block;" v-show="selectedRowKeys.length > 0">
+          <a-button @click="deleteSelection">
+            <a-icon type="delete" />删除
           </a-button>
-        </a-dropdown>
+          <a-button>
+            <a-icon type="lock" />锁定
+          </a-button>
+          <a-button>
+            <a-icon type="edit" />修改
+          </a-button>
+        </div>
       </div>
 
       <s-table
@@ -104,8 +122,9 @@
         rowKey="key"
         :columns="columns"
         :data="loadData"
-        :alert="true"
+        :alert="false"
         :rowSelection="rowSelection"
+        :customRow="customRow"
         showPagination="auto"
       >
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
@@ -116,15 +135,15 @@
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
-        <span slot="action" slot-scope="text, record">
+        <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
             <a-divider type="vertical" />
             <a @click="handleSub(record)">订阅报警</a>
           </template>
-        </span>
+        </span>-->
       </s-table>
-      <create-form
+      <!-- <create-form
         ref="createModal"
         :visible="visible"
         :loading="confirmLoading"
@@ -132,7 +151,7 @@
         @cancel="handleCancel"
         @ok="handleOk"
       />
-      <step-by-step-modal ref="modal" @ok="handleOk" />
+      <step-by-step-modal ref="modal" @ok="handleOk" />-->
     </a-card>
   </page-header-wrapper>
 </template>
@@ -175,13 +194,13 @@ const columns = [
     title: '更新时间',
     dataIndex: 'updatedAt',
     sorter: true
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: '150px',
-    scopedSlots: { customRender: 'action' }
   }
+  // {
+  //   title: '操作',
+  //   dataIndex: 'action',
+  //   width: '150px',
+  //   scopedSlots: { customRender: 'action' }
+  // }
 ]
 
 const statusMap = {
@@ -218,8 +237,8 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索 展开/关闭 已删除
-      advanced: true,
+      // 高级搜索 展开/关闭
+      advanced: false,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -233,6 +252,7 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: []
+
     }
   },
   filters: {
@@ -250,11 +270,25 @@ export default {
     rowSelection () {
       return {
         selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
+        onChange: this.onSelectChange,
+        type: 'radio'
       }
     }
+
   },
   methods: {
+    customRow (record, index) {
+      index++
+      return {
+        on: {
+          click: (e) => {
+            console.log(record, index)
+            this.selectedRowKeys = [index]
+            this.selectedRows = [record]
+          }
+        }
+      }
+    },
     handleAdd () {
       this.mdl = null
       this.visible = true
@@ -324,7 +358,7 @@ export default {
       // console.log('selectChanged，selectedRowKeys:' + this.selectedRowKeys + '||' + selectedRowKeys + 'selectedRows:' + this.selectedRows + '||' + selectedRows)
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-      console.log(selectedRowKeys.length)
+      console.log(selectedRows[0].key)
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
@@ -354,6 +388,9 @@ export default {
     onChange (checkedValues) {
       // console.log('checked = ', checkedValues)
       this.queryParam.checkedValues = checkedValues
+    },
+    deleteSelection (checkedValues) {
+      // TODO:待数据格式改为json时把mock数据删掉，再写删除、新增、锁定的逻辑。
     }
   }
 }

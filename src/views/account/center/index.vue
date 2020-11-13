@@ -5,7 +5,7 @@
         <a-card :bordered="false">
           <div class="account-center-avatarHolder">
             <div class="avatar">
-              <img :src="avatar">
+              <img :src="avatar" />
             </div>
             <div class="username">{{ nickname }}</div>
             <div class="bio">海纳百川，有容乃大</div>
@@ -23,7 +23,7 @@
               <span>杭州市</span>
             </p>
           </div>
-          <a-divider/>
+          <a-divider />
 
           <div class="account-center-tags">
             <div class="tagsTitle">标签</div>
@@ -55,11 +55,11 @@
                 @keyup.enter="handleTagInputConfirm"
               />
               <a-tag v-else @click="showTagInput" style="background: #fff; borderStyle: dashed;">
-                <a-icon type="plus"/>New Tag
+                <a-icon type="plus" />New Tag
               </a-tag>
             </div>
           </div>
-          <a-divider :dashed="true"/>
+          <a-divider :dashed="true" />
 
           <div class="account-center-team">
             <div class="teamTitle">团队</div>
@@ -68,7 +68,7 @@
                 <a-row>
                   <a-col :span="12" v-for="(item, index) in teams" :key="index">
                     <a>
-                      <a-avatar size="small" :src="item.avatar"/>
+                      <a-avatar size="small" :src="item.avatar" />
                       <span class="member">{{ item.name }}</span>
                     </a>
                   </a-col>
@@ -78,7 +78,8 @@
           </div>
         </a-card>
       </a-col>
-      <a-col :md="24" :lg="17">
+      <!-- 右侧 -->
+      <!-- <a-col :md="24" :lg="17">
         <a-card
           style="width:100%"
           :bordered="false"
@@ -90,7 +91,7 @@
           <app-page v-else-if="noTitleKey === 'app'"></app-page>
           <project-page v-else-if="noTitleKey === 'project'"></project-page>
         </a-card>
-      </a-col>
+      </a-col>-->
     </a-row>
   </div>
 </template>

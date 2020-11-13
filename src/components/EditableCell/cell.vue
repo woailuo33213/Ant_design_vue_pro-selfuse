@@ -10,6 +10,21 @@
             @change="handleChange"
             autocomplete="off"
           />
+          <a-input
+            v-if="showFormItem('inputSearch')"
+            v-decorator="decorator"
+            :placeholder="placeholder"
+            @change="handleChange"
+            autocomplete="off"
+          >
+            <!-- <div slot="prefix">
+              <a-button icon="edit"></a-button>
+            </div>-->
+            <btnQS
+              slot="suffix"
+              style="border: 0px;background-color: transparent; margin-right: -10px;"
+            />
+          </a-input>
           <a-input-number
             :min="min"
             :max="max"
@@ -56,6 +71,12 @@
           >
             <slot />
           </a-select>
+
+          <!-- 单选框组件 -->
+          <a-radio-group v-if="showFormItem('radioGroup')" @change="handleChange">
+            <slot />
+          </a-radio-group>
+
           <a-auto-complete
             v-if="showFormItem('autoComplete')"
             v-decorator="decorator"
@@ -80,12 +101,16 @@
   </div>
 </template>
 <script>
+import btnQS from '../ButtonQuickSelect/BtnQuickSelect'
 export default {
   data () {
     return {
       form: this.$form.createForm(this),
       editable: this.defaultEditable
     }
+  },
+  components: {
+    btnQS
   },
   props: {
     // 非编辑模式下，显示文本
@@ -100,7 +125,7 @@ export default {
     // 表单组件类型
     formType: {
       validator (value) {
-        return ['input', 'number', 'switch', 'datePicker', 'rangePicker', 'select', 'monthPicker', 'autoComplete'].indexOf(value) !== -1
+        return ['input', 'inputSearch', 'number', 'switch', 'datePicker', 'rangePicker', 'select', 'radioGroup', 'monthPicker', 'autoComplete'].indexOf(value) !== -1
       },
       default: 'input'
     },
@@ -129,6 +154,8 @@ export default {
     selectLabelInValue: { type: Boolean, default: false },
     // 多选选择框默认值
     selectDefaultValue: { type: Array }
+    // 单选框未选择的提示,无法实现
+    // radioChecked: { type: String, default: '请选择' }
   },
   computed: {
     // 格式化文本
@@ -176,6 +203,8 @@ export default {
           this.$emit('valueChange', value.target.value)
         } else if (this.formType === 'select') {
           this.$emit('valueChange', value)
+        } else if (this.formType === 'radioGroup') {
+          this.$emit('radioSelectedChanged', value)
         }
       }
       // this.check(false);

@@ -142,6 +142,7 @@
               @preview="handlePreview"
               @change="handleChange"
             >
+              <!-- //TODO: disabled的实现 -->
               <div v-if="fileList.length < 8">
                 <a-icon type="plus" />
                 <div class="ant-upload-text">Upload</div>
@@ -178,8 +179,9 @@
 </template>
 
 <script>
-import richText from '../../../components/Editor/QuillEditor.vue'
-import btnQS from '../../../components/ButtonQuickSelect/BtnQuickSelect.vue'
+import richText from '../../../components/Editor/QuillEditor'
+import btnQS from '../../../components/ButtonQuickSelect/BtnQuickSelect'
+
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -200,13 +202,14 @@ export default {
       value: '',
       fileList: [
         {
-          uid: '-1',
+          uid: '1',
           name: 'image.png',
           status: 'done',
+          response: '{"disabled":"true"}',
           url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
         },
         {
-          uid: '-2',
+          uid: '2',
           name: 'image.png',
           status: 'done',
           url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'

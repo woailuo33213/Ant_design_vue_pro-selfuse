@@ -13,10 +13,15 @@
   >
     <setting-drawer :settings="settings" @change="handleSettingChange" />
     <template v-slot:rightContentRender>
-      <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
+      <right-content
+        :top-menu="settings.layout === 'topmenu'"
+        :is-mobile="isMobile"
+        :theme="settings.theme"
+      />
     </template>
     <template v-slot:footerRender>
-      <global-footer />
+      <!-- 具名插槽，此处作为父组件向子组件传输数据。由于ant pro没有提供API所以重构时没有办法解决默认集成的子组件内容。（其实是因为我翻不到源码里面的定义） -->
+      <!-- <global-footer /> -->
     </template>
     <router-view />
   </pro-layout>
@@ -31,7 +36,7 @@ import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mu
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
-import Ads from '@/components/Other/CarbonAds'
+// import Ads from '@/components/Other/CarbonAds'
 import LogoSvg from '../assets/logo.svg?inline'
 
 export default {
@@ -39,8 +44,8 @@ export default {
   components: {
     SettingDrawer,
     RightContent,
-    GlobalFooter,
-    Ads
+    GlobalFooter
+    // Ads
   },
   data () {
     return {
@@ -153,5 +158,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "./BasicLayout.less";
+@import './BasicLayout.less';
 </style>

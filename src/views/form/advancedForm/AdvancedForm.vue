@@ -5,12 +5,6 @@
     </a-card>
     <a-card class="card">
       <div>
-        <a-button
-          style="width: 100%; margin-top: 16px; margin-bottom: 8px"
-          type="dashed"
-          icon="plus"
-          @click="handleAdd"
-        >新增成员</a-button>
         <a-table
           bordered
           :dataSource="dataSource"
@@ -24,6 +18,7 @@
               :defaultEditable="record.editable"
               :autoSave="true"
               :required="true"
+              formType="inputSearch"
               :decoratorOptions="rules.name"
               placeholder="请输入"
               :value="text"
@@ -87,7 +82,21 @@
             />
           </template>
 
-          <template slot="email" slot-scope="text, record">
+          <template slot="sex" slot-scope="text, record">
+            <editable-cell
+              :ref="`sex_${record.key}`"
+              formType="radioGroup"
+              :defaultEditable="record.editable"
+              :required="true"
+              :value="record.sexCode"
+              :text="record.sexName"
+            >
+              <!-- TODO:// validate undefined 于 advancedForm -->
+              <a-radio value="1">男</a-radio>
+              <a-radio value="0">女</a-radio>
+            </editable-cell>
+          </template>
+          <!-- <template slot="email" slot-scope="text, record">
             <editable-cell
               :ref="`email_${record.key}`"
               :defaultEditable="record.editable"
@@ -106,7 +115,7 @@
                 :value="email"
               >{{ email }}</a-select-option>
             </editable-cell>
-          </template>
+          </template>-->
 
           <template slot="address" slot-scope="text, record">
             <editable-cell
@@ -142,21 +151,20 @@
             </div>
           </template>
         </a-table>
-        <!-- <ul>
-          <li>
-            当前行数据：
-            <pre> {{ JSON.stringify(signData,null,2) }} </pre>
-          </li>
-          <li>
-            批量多行数据：
-            <pre> {{ JSON.stringify(mulData,null,2) }} </pre>
-          </li>
-        </ul>-->
+        <a-button
+          style="width: 100%; margin-top: 16px; margin-bottom: 8px"
+          type="dashed"
+          icon="plus"
+          @click="handleAdd"
+        >新增成员</a-button>
+        <a-form-item :wrapperCol="{ span: 24 }" style="text-align: center">
+          <a-button type="primary" @click="handleSub">提交</a-button>
+        </a-form-item>
       </div>
     </a-card>
-    <a-layout-footer class="footer">
-      <a-button type="primary" @click="handleSub" class="subBtn">提交</a-button>
-    </a-layout-footer>
+    <!-- <a-layout-footer class="footer">
+
+    </a-layout-footer>-->
   </page-header-wrapper>
 </template>
 
@@ -165,6 +173,7 @@ import RepositoryForm from './RepositoryForm'
 import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import EditableCell from '@/components/EditableCell/cell'
+
 import moment from 'moment'
 export default {
   name: 'AdvancedForm',
@@ -189,7 +198,8 @@ export default {
           countryName: 'China',
           date: '2016-06-18 18:02:20',
           address: '山东省烟台市芝罘区 祥和中学',
-          email: 'zhangsan666@163.com'
+          sexName: '男',
+          sexCode: 1
         },
         {
           key: '1',
@@ -200,7 +210,8 @@ export default {
           countryName: 'U.S.A',
           date: '2008-12-05 14:55:21',
           address: 'London, Park Lane no. 1',
-          email: 'edkSuper@outlook.com'
+          sexName: '女',
+          sexCode: 0
         }
       ],
       count: 2,
@@ -254,10 +265,10 @@ export default {
           scopedSlots: { customRender: 'address' }
         },
         {
-          title: 'email',
-          dataIndex: 'email',
+          title: 'sex',
+          dataIndex: 'sex',
           width: '150px',
-          scopedSlots: { customRender: 'email' }
+          scopedSlots: { customRender: 'sex' }
         },
         {
           title: 'operation',
@@ -267,7 +278,7 @@ export default {
           scopedSlots: { customRender: 'operation' }
         }
       ],
-      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'email'],
+      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'countryName', 'sexCode', 'sexName'],
       rules: {
         name: {
           rules: [{
@@ -290,22 +301,21 @@ export default {
             max: 30
           }]
         }
-      },
-      emailList: []
+      }
     }
   },
   methods: {
     moment,
     // 模糊搜索
-    handleSearch (value) {
-      let result
-      if (!value || value.indexOf('@') >= 0) {
-        result = []
-      } else {
-        result = ['gmail.com', '163.com', 'qq.com', 'outlook.com'].map(domain => `${value}@${domain}`)
-      }
-      this.emailList = result
-    },
+    // handleSearch (value) {
+    //   let result
+    //   if (!value || value.indexOf('@') >= 0) {
+    //     result = []
+    //   } else {
+    //     result = ['gmail.com', '163.com', 'qq.com', 'outlook.com'].map(domain => `${value}@${domain}`)
+    //   }
+    //   this.emailList = result
+    // },
     // input Change事件
     onCellChange (key, dataIndex, value) {
       console.log(`${dataIndex}：${value} `)
@@ -343,6 +353,12 @@ export default {
             values.countryName = 'China'
           } else if (values.countryCode === '02') {
             values.countryName = 'U.S.A'
+          }
+          console.log(values)
+          if (values.sexCode === '1') {
+            values.sexName = '男'
+          } else if (values.sexCode === '0') {
+            values.sexName = '女'
           }
           const newData = [...this.dataSource]
           const row = newData.find(item => key === item.key)
@@ -499,9 +515,5 @@ pre {
   // border-top: 1px solid #ccc;
   width: 120%;
   height: 2em;
-}
-.subBtn {
-  position: relative;
-  bottom: 15px;
 }
 </style>

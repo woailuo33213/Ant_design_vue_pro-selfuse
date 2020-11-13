@@ -12,10 +12,6 @@ import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 // 富文本引用
 import VueQuillEditor from 'vue-quill-editor'
-// import './views/assets/css/quill.core.css'
-// import './views/assets/css/quill.snow.css'
-// import './views/assets/css/quill.bubble.css'
-
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
