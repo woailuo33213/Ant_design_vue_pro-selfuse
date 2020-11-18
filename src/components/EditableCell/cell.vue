@@ -73,7 +73,7 @@
           </a-select>
 
           <!-- 单选框组件 -->
-          <a-radio-group v-if="showFormItem('radioGroup')" @change="handleChange">
+          <a-radio-group v-if="showFormItem('radioGroup')" @change="radioChange">
             <slot />
           </a-radio-group>
 
@@ -198,13 +198,16 @@ export default {
     },
     // 表单change事件
     handleChange (value) {
+      // console.log(value)
       if (this.autoSave) {
         if (this.formType === 'input') {
+          // console.log(value.target.value)
           this.$emit('valueChange', value.target.value)
         } else if (this.formType === 'select') {
           this.$emit('valueChange', value)
         } else if (this.formType === 'radioGroup') {
-          this.$emit('radioSelectedChanged', value)
+          this.$emit('valueChange', value.target.value)
+          // console.log(value.target.value)
         }
       }
       // this.check(false);
@@ -219,11 +222,14 @@ export default {
         success: false,
         value: ''
       }
+      // console.log(this)
       this.form.validateFields((err, values) => {
         if (!err) {
           if (!this.editable) {
             result.value = this.getText
           } else {
+            // console.log('cell:values:')
+            // console.log(values)
             result.value = values.formName
           }
           result.success = true
@@ -253,6 +259,9 @@ export default {
     edit () {
       this.editable = true
       this.decorator = this.value
+    },
+    radioChange (selected) {
+      // console.log(selected.target.value)
     }
   },
   created () {

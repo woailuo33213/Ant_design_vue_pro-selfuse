@@ -19,7 +19,10 @@ export default {
   props: {
     prefixCls: {
       type: String,
-      default: 'ant-pro-global-header-index-action'
+      default: 'ant-pro-global-header-index-action',
+      style: {
+        border: 0
+      }
     },
     isMobile: {
       type: Boolean,

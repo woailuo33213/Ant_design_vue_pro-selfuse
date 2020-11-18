@@ -84,11 +84,10 @@
 
           <template slot="sex" slot-scope="text, record">
             <editable-cell
-              :ref="`sex_${record.key}`"
+              :ref="`sexCode_${record.key}`"
               formType="radioGroup"
               :defaultEditable="record.editable"
               :required="true"
-              :value="record.sexCode"
               :text="record.sexName"
             >
               <!-- TODO:// validate undefined 于 advancedForm -->
@@ -278,7 +277,7 @@ export default {
           scopedSlots: { customRender: 'operation' }
         }
       ],
-      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'countryName', 'sexCode', 'sexName'],
+      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'sexCode'],
       rules: {
         name: {
           rules: [{
@@ -336,7 +335,11 @@ export default {
     // 点击编辑
     edit (key) {
       const newData = [...this.dataSource]
+      // console.log('当前数据：' + newData)
+      // console.log(newData.key + 'key:' + key)
       const target = newData.filter(item => key === item.key)[0]
+      // console.log(newData.countryCode) 未定义
+      // console.log('当前数据：' + newData.sexCode) 未定义
       if (target) {
         target.editable = true
         this.dataSource = newData
@@ -344,7 +347,9 @@ export default {
     },
     // 点击保存
     save (key) {
+      // console.log(key) 打印了
       this.validateRow(key, this.fields, (err, values) => {
+        // console.log(this.fields) fields里有 sexCode和sexName
         if (!err) {
           values.isNew = false
           values.date = values.date.format('YYYY-MM-DD hh:mm:ss')
@@ -354,10 +359,10 @@ export default {
           } else if (values.countryCode === '02') {
             values.countryName = 'U.S.A'
           }
-          console.log(values)
-          if (values.sexCode === '1') {
+          console.log(values) // 未执行
+          if (values.sexCode === 1) {
             values.sexName = '男'
-          } else if (values.sexCode === '0') {
+          } else if (values.sexCode === 0) {
             values.sexName = '女'
           }
           const newData = [...this.dataSource]
@@ -368,7 +373,7 @@ export default {
             delete row.editable
             this.signData = row
             console.log('单行保存row', row)
-            // target 保存了最新行数据，可以提价到后台
+            // target 保存了最新行数据，可以提交到后台
             this.dataSource = newData
           }
         }
@@ -389,9 +394,26 @@ export default {
       const row = {}
       let err = false
       // forEach 对每一个验证，可以更改为some满足一个就提醒
+      // console.log(fields)
+      // fields.forEach(f => {
+      //   console.log('field:' + f + 'key:' + key)
+      // })
+      // 数据全在
       fields.forEach(filed => {
+        // console.log('filed:' + filed)
         const refName = `${filed}_${key}`
+        // console.log('refName:' + refName)
+        // console.log(this.$refs['countryCode_0'])拿到了
+        // console.log(this.$refs['sexName_0']) 没拿到
+        // console.log(this.$refs.sexCode_0) 一模一样
+        // console.log(this.$refs.countryCode_0) 一模一样
+        // console.log(this.$refs.sexCode_0.validate()) value: 未定义
+        // console.log(this.$refs.countryCode_0.validate()) value:有
+        // console.log(this.$refs[refName]) 取不到sexCode
+        // 万万没想到，问题出在之前加在filed里面的countryName
         const result = this.$refs[refName].validate()
+        // const result = this.$refs.refName.validate() 在使用变量时(refName)不用这种拼接方式
+        // console.log('validate完成')
         row[filed] = result.value
         if (!result.success) {
           err = true
@@ -448,6 +470,9 @@ export default {
       }
       this.dataSource = [...dataSource, newData]
       this.count = count + 1
+    },
+    radioChange (selected) {
+      console.log(selected)
     }
   }
 }
