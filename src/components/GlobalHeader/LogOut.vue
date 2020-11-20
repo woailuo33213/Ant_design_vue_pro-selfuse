@@ -19,6 +19,8 @@ export default {
           // }).catch(() => console.log('Oops errors!'))
           return this.$store.dispatch('Logout').then(() => {
             this.$router.push({ name: 'login' })
+            // localtion.reload()
+            // alert('logout ,jump to login') 打印后跳转到了默认的workbanch
           })
         },
         onCancel () { }

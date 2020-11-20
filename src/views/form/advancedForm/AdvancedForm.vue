@@ -64,8 +64,11 @@
               :value="record.countryCode"
               :text="record.countryName"
             >
-              <a-select-option value="01">China</a-select-option>
-              <a-select-option value="02">U.S.A</a-select-option>
+              <a-select-option
+                v-for="(item,i) in countryList"
+                :key="item+''+i"
+                :value="i.toString()"
+              >{{ item }}</a-select-option>
             </editable-cell>
           </template>
 
@@ -89,44 +92,39 @@
               :defaultEditable="record.editable"
               :required="true"
               :text="record.sexName"
+              :value="record.sexCode"
             >
-              <!-- TODO:// validate undefined 于 advancedForm -->
-              <a-radio value="1">男</a-radio>
-              <a-radio value="0">女</a-radio>
+              <!-- <div>{{record.sexCode}}</div> -->
+              <!-- value传到cell,通过decorator渲染 -->
+              <a-radio v-for="(item,i) in sexList" :key="item+''+i" :value="i.toString()">{{ item }}</a-radio>
             </editable-cell>
           </template>
-          <!-- <template slot="email" slot-scope="text, record">
+          <template slot="hobby" slot-scope="text, record">
             <editable-cell
-              :ref="`email_${record.key}`"
+              :ref="`checkedBox_${record.key}`"
+              formType="checkboxGroup"
               :defaultEditable="record.editable"
-              :required="true"
-              formType="autoComplete"
-              :decoratorOptions="rules.email"
-              placeholder="请输入"
-              :value="text"
-              :text="text"
-              @autoCompleteSearch="handleSearch($event,record.key)"
+              :required="false"
+              :text="getHobbies(record.hobbies)"
+              :value="record.checkedBox"
             >
-              <a-select-option
-                v-for="email in emailList"
-                :key="email"
-                :text="email"
-                :value="email"
-              >{{ email }}</a-select-option>
+              <a-checkbox
+                v-for="(item,i) in hobbiesList"
+                :key="item+''+i"
+                :value="(i+1).toString()"
+              >{{ item }}</a-checkbox>
+            </editable-cell>
+          </template>
+          <!-- <template slot="upload" slot-scope="text, record">
+            <editable-cell
+              :ref="`upload_${record.key}`"
+              formType="upload"
+              :defaultEditable="record.editable"
+              :value="record.fileList"
+            >
+              <image />
             </editable-cell>
           </template>-->
-
-          <template slot="address" slot-scope="text, record">
-            <editable-cell
-              :text="text"
-              :decoratorOptions="rules.address"
-              :singleEdit="true"
-              :value="text"
-              :defaultEditable="record.editable"
-              @valueChange="onCellChange(record.key, 'address', $event)"
-            />
-          </template>
-
           <template slot="operation" slot-scope="text, record">
             <div class="editable-row-operations">
               <span v-if="record.editable && !record.isNew">
@@ -187,30 +185,39 @@ export default {
       signData: [],
       mulData: [],
       dateFormat: 'YYYY-MM-DD hh:mm:ss',
+      hobbiesList: ['唱歌', '游戏', '小说', 'D'],
+      sexList: ['女', '男'],
+      countryList: ['China', 'U.S.A'],
       dataSource: [
         {
           key: '0',
           name: '张三',
           age: 16,
           hasCar: true,
-          countryCode: '01',
+          countryCode: '0',
           countryName: 'China',
           date: '2016-06-18 18:02:20',
           address: '山东省烟台市芝罘区 祥和中学',
           sexName: '男',
-          sexCode: 1
+          sexCode: '1',
+          hobbies: ['D', '唱歌'],
+          checkedBox: ['1', '4']
+          // fileList: []
         },
         {
           key: '1',
           name: 'Edward King',
           age: 33,
           hasCar: false,
-          countryCode: '02',
+          countryCode: '1',
           countryName: 'U.S.A',
           date: '2008-12-05 14:55:21',
           address: 'London, Park Lane no. 1',
           sexName: '女',
-          sexCode: 0
+          sexCode: '0',
+          hobbies: ['小说'],
+          checkedBox: ['3']
+          // fileList: []
         }
       ],
       count: 2,
@@ -236,7 +243,7 @@ export default {
         {
           title: '日期',
           dataIndex: 'date',
-          width: '200px',
+          width: '220px',
           scopedSlots: { customRender: 'date' }
         },
         // {
@@ -248,7 +255,7 @@ export default {
         {
           title: '国籍',
           dataIndex: 'country',
-          width: '100px',
+          width: '120px',
           scopedSlots: { customRender: 'country' }
         },
         {
@@ -258,17 +265,23 @@ export default {
           scopedSlots: { customRender: 'hasCar' }
         },
         {
-          title: 'address',
-          dataIndex: 'address',
-          width: '150px',
-          scopedSlots: { customRender: 'address' }
+          title: 'hobby',
+          dataIndex: 'hobby',
+          width: '120px',
+          scopedSlots: { customRender: 'hobby' }
         },
         {
           title: 'sex',
           dataIndex: 'sex',
-          width: '150px',
+          width: '140px',
           scopedSlots: { customRender: 'sex' }
         },
+        // {
+        //   title: 'upload',
+        //   dataIndex: 'upload',
+        //   width: '130px',
+        //   scopedSlots: { customRender: 'upload' }
+        // },
         {
           title: 'operation',
           dataIndex: 'operation',
@@ -277,7 +290,7 @@ export default {
           scopedSlots: { customRender: 'operation' }
         }
       ],
-      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'sexCode'],
+      fields: ['name', 'age', 'date', 'hasCar', 'countryCode', 'sexCode', 'checkedBox'],
       rules: {
         name: {
           rules: [{
@@ -335,11 +348,10 @@ export default {
     // 点击编辑
     edit (key) {
       const newData = [...this.dataSource]
-      // console.log('当前数据：' + newData)
+      // console.log(newData) 有sexCode
       // console.log(newData.key + 'key:' + key)
       const target = newData.filter(item => key === item.key)[0]
-      // console.log(newData.countryCode) 未定义
-      // console.log('当前数据：' + newData.sexCode) 未定义
+      // console.log(target)
       if (target) {
         target.editable = true
         this.dataSource = newData
@@ -353,18 +365,17 @@ export default {
         if (!err) {
           values.isNew = false
           values.date = values.date.format('YYYY-MM-DD hh:mm:ss')
-          // values.month = values.month.format('YYYY-MM')
-          if (values.countryCode === '01') {
-            values.countryName = 'China'
-          } else if (values.countryCode === '02') {
-            values.countryName = 'U.S.A'
-          }
-          console.log(values) // 未执行
-          if (values.sexCode === 1) {
-            values.sexName = '男'
-          } else if (values.sexCode === 0) {
-            values.sexName = '女'
-          }
+
+          values.countryName = this.countryList[values.countryCode]
+          values.sexName = this.sexList[values.sexCode]
+          const hobbies = this.hobbiesList
+          values.hobbies = []
+          values.checkedBox.forEach((item, i) => {
+            // console.log(item) 1 4
+            // console.log(hobbies[--item]) 唱歌 D
+            values.hobbies.push(hobbies[--item])
+          })
+          // console.log(values)
           const newData = [...this.dataSource]
           const row = newData.find(item => key === item.key)
           if (row) {
@@ -411,6 +422,8 @@ export default {
         // console.log(this.$refs.countryCode_0.validate()) value:有
         // console.log(this.$refs[refName]) 取不到sexCode
         // 万万没想到，问题出在之前加在filed里面的countryName
+        console.log(refName)
+        console.log(this.$refs[refName])
         const result = this.$refs[refName].validate()
         // const result = this.$refs.refName.validate() 在使用变量时(refName)不用这种拼接方式
         // console.log('validate完成')
@@ -471,8 +484,9 @@ export default {
       this.dataSource = [...dataSource, newData]
       this.count = count + 1
     },
-    radioChange (selected) {
-      console.log(selected)
+    getHobbies (list) {
+      // console.log(list.toString())
+      return list.toString()
     }
   }
 }

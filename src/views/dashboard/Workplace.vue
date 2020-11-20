@@ -17,7 +17,7 @@
 
     <div>
       <a-col style="padding: 0 12px" :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
-        <a-card
+        <!-- <a-card
           title="快速开始 / 便捷导航"
           style="margin-bottom: 24px"
           :bordered="false"
@@ -32,7 +32,9 @@
             <a>操作六</a>
             <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
           </div>
-        </a-card>
+        </a-card>-->
+        <!-- //TODO: 未测试的移动。检查app-page是否在首页显示正常 -->
+        <app-page></app-page>
       </a-col>
     </div>
   </page-header-wrapper>
@@ -43,7 +45,7 @@ import { timeFix } from '@/utils/util'
 import { mapState } from 'vuex'
 import { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import { Radar } from '@/components'
-
+import { AppPage } from './page'
 import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
@@ -52,7 +54,8 @@ export default {
   name: 'Workplace',
   components: {
     PageHeaderWrapper,
-    Radar
+    Radar,
+    AppPage
   },
   data () {
     return {

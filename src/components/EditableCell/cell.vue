@@ -73,9 +73,12 @@
           </a-select>
 
           <!-- 单选框组件 -->
-          <a-radio-group v-if="showFormItem('radioGroup')" @change="radioChange">
+          <a-radio-group v-if="showFormItem('radioGroup')" v-decorator="decorator">
             <slot />
           </a-radio-group>
+          <a-checkbox-group v-if="showFormItem('checkboxGroup')" v-decorator="decorator">
+            <slot />
+          </a-checkbox-group>
 
           <a-auto-complete
             v-if="showFormItem('autoComplete')"
@@ -90,6 +93,26 @@
               <slot />
             </template>
           </a-auto-complete>
+          <!-- upload组件插入 -->
+          <template v-if="showFormItem('upload')" v-decorator="decorator">
+            <div class="clearfix">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="uploadHandleChange"
+              >
+                <div v-if="fileList.length < 8">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">Upload</div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </div>
+          </template>
         </a-form-item>
       </a-form>
       <a-icon v-if="singleEdit" type="check" class="editable-cell-icon-check" @click="check(true)" />
@@ -102,9 +125,27 @@
 </template>
 <script>
 import btnQS from '../ButtonQuickSelect/BtnQuickSelect'
+function getBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
+}
 export default {
   data () {
     return {
+      previewVisible: false,
+      previewImage: '',
+      fileList: [
+        {
+          uid: '-1',
+          name: 'logo.png',
+          status: 'done',
+          url: '../../assets/logo.png'
+        }
+      ],
       form: this.$form.createForm(this),
       editable: this.defaultEditable
     }
@@ -125,7 +166,7 @@ export default {
     // 表单组件类型
     formType: {
       validator (value) {
-        return ['input', 'inputSearch', 'number', 'switch', 'datePicker', 'rangePicker', 'select', 'radioGroup', 'monthPicker', 'autoComplete'].indexOf(value) !== -1
+        return ['input', 'inputSearch', 'number', 'switch', 'datePicker', 'rangePicker', 'select', 'radioGroup', 'checkboxGroup', 'upload', 'monthPicker', 'autoComplete'].indexOf(value) !== -1
       },
       default: 'input'
     },
@@ -168,6 +209,8 @@ export default {
     // 根据属性，合成表单验证装饰器
     decorator: {
       get () {
+        // console.log('decorator')
+        // console.log(this.decoratorOptions)
         if (this.decoratorOptions) {
           const itemDecorator = ['formName', {
             initialValue: this.value,
@@ -175,9 +218,12 @@ export default {
           }]
           return itemDecorator
         }
+        // console.log(this.value.type)
         const itemDecorator = ['formName', {
           initialValue: this.value
         }]
+        // console.log('itemDecorator')
+        // console.log(itemDecorator)
         return itemDecorator
       },
       set (value) {
@@ -205,10 +251,11 @@ export default {
           this.$emit('valueChange', value.target.value)
         } else if (this.formType === 'select') {
           this.$emit('valueChange', value)
-        } else if (this.formType === 'radioGroup') {
-          this.$emit('valueChange', value.target.value)
-          // console.log(value.target.value)
         }
+        // else if (this.formType === 'radioGroup') {
+        //   this.$emit('valueChange', value.target.value)
+        //   // console.log(value.target.value)
+        // }
       }
       // this.check(false);
     },
@@ -262,6 +309,22 @@ export default {
     },
     radioChange (selected) {
       // console.log(selected.target.value)
+      // console.log(this.record)
+      // this.value = selected.target.value 错误用法
+      console.log('radiochanged:' + this.value)
+    },
+    handleCancel () {
+      this.previewVisible = false
+    },
+    async handlePreview (file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj)
+      }
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
+    },
+    uploadHandleChange ({ fileList }) {
+      this.fileList = fileList
     }
   },
   created () {

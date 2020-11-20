@@ -1,4 +1,5 @@
 import { asyncRouterMap, constantRouterMap } from '@/config/router.config'
+import cloneDeep from 'lodash.clonedeep'
 
 /**
  * 过滤账户是否拥有某一个权限，并将菜单从加载列表移除
@@ -38,7 +39,9 @@ function hasRole(roles, route) {
 }
 
 function filterAsyncRouter (routerMap, roles) {
-  const accessedRouters = routerMap.filter(route => {
+  // 增加此行是因为如果不深拷贝，会更改原路由表，当切换用户时，会出现用户该有的菜单无法显示
+  const asyncRouterMap = cloneDeep(routerMap)
+  const accessedRouters = asyncRouterMap.filter(route => {
     if (hasPermission(roles.permissionList, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouter(route.children, roles)

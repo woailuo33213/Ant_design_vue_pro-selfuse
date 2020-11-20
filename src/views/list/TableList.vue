@@ -126,6 +126,14 @@
         :rowSelection="rowSelection"
         :customRow="customRow"
         showPagination="auto"
+        :pagination="{
+          onChange: () => {
+                  if (this.rowSelection) {
+                    this.selectedRows = []
+                    this.selectedRowKeys = []
+            }
+          }
+        }"
       >
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
         <span slot="status" slot-scope="text">
@@ -165,10 +173,10 @@ import StepByStepModal from './modules/StepByStepModal'
 import CreateForm from './modules/CreateForm'
 
 const columns = [
-  {
-    title: '#',
-    scopedSlots: { customRender: 'serial' }
-  },
+  // {
+  //   title: '#',
+  //   scopedSlots: { customRender: 'serial' }
+  // },
   {
     title: '规则编号',
     dataIndex: 'no'
@@ -250,6 +258,18 @@ export default {
             return res.result
           })
       },
+      // pageSetting: {
+      //   clearSelected () {
+      //     if (this.rowSelection) {
+      //       this.rowSelection.onChange([], [])
+      //       this.updateSelect([], [])
+      //     }
+      //   },
+      //   change () {
+      //     console.log('change')
+      //     this.clearSelected()
+      //   }
+      // },
       selectedRowKeys: [],
       selectedRows: []
 
@@ -271,19 +291,18 @@ export default {
       return {
         selectedRowKeys: this.selectedRowKeys,
         onChange: this.onSelectChange,
-        type: 'radio'
+        type: 'checkbox'
       }
     }
 
   },
   methods: {
-    customRow (record, index) {
-      index++
+    customRow (record) {
       return {
         on: {
           click: (e) => {
-            console.log(record, index)
-            this.selectedRowKeys = [index]
+            console.log(record, record.key)
+            this.selectedRowKeys = [record.key]
             this.selectedRows = [record]
           }
         }
@@ -358,7 +377,8 @@ export default {
       // console.log('selectChanged，selectedRowKeys:' + this.selectedRowKeys + '||' + selectedRowKeys + 'selectedRows:' + this.selectedRows + '||' + selectedRows)
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-      console.log(selectedRows[0].key)
+      // console.log('选中行')
+      // console.log(this.selectedRows)
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
